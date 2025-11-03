@@ -1,0 +1,346 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF"
+    tools:context=".MainActivity">
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:alpha="10"
+        android:background="#222222"
+        android:drawableLeft="@drawable/ic_launcher_foreground"
+        android:gravity="center_vertical"
+        android:text="LifeCycle"
+        android:textColor="#F6E8E8"
+        android:textSize="24sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="0dp"
+        android:layout_height="144dp"
+        android:background="#DFDFDF"
+        android:gravity="bottom|end"
+        android:paddingEnd="16dp"
+        android:text="0"
+        android:textSize="96sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView"
+        tools:ignore="RtlSymmetry" />
+
+    <!-- Dòng hiển thị biểu thức nhập -->
+
+    <!-- Hàng 1: CE, C, BS, / -->
+
+    <TextView
+        android:id="@+id/textExpression"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:gravity="end"
+        android:paddingEnd="16dp"
+        android:text=""
+        android:textColor="#666666"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toTopOf="@+id/textView2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <Button
+        android:id="@+id/btnCE"
+        style="@style/CaculatorButton"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="10dp"
+        android:backgroundTint="#A6A1A1"
+        android:text="CE"
+        android:textColor="#000000"
+        app:layout_constraintBottom_toTopOf="@+id/btn7"
+        app:layout_constraintEnd_toStartOf="@+id/btnC"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView2" />
+
+    <Button
+        android:id="@+id/btnC"
+        style="@style/CaculatorButton"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:backgroundTint="#A6A1A1"
+        android:text="C"
+        android:textColor="#000000"
+        app:layout_constraintBottom_toBottomOf="@+id/btnCE"
+        app:layout_constraintEnd_toStartOf="@+id/btnBS"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/btnCE"
+        app:layout_constraintTop_toTopOf="@+id/btnCE" />
+
+    <Button
+        android:id="@+id/btnBS"
+        style="@style/CaculatorButton"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:backgroundTint="#A6A1A1"
+        android:text="BS"
+        android:textColor="#000000"
+        app:layout_constraintBottom_toBottomOf="@+id/btnC"
+        app:layout_constraintEnd_toStartOf="@+id/btnDivide"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/btnC"
+        app:layout_constraintTop_toTopOf="@+id/btnC" />
+
+    <Button
+        android:id="@+id/btnDivide"
+        style="@style/CaculatorButton"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:backgroundTint="#A6A1A1"
+        android:text="/"
+        android:textColor="#000000"
+        app:layout_constraintBottom_toBottomOf="@+id/btnBS"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/btnBS"
+        app:layout_constraintTop_toTopOf="@+id/btnBS" />
+
+    <!-- Hàng 2: 7, 8, 9, x -->
+    <Button
+        android:id="@+id/btn7"
+        style="@style/CaculatorButton"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:backgroundTint="#D2D2D2"
+        android:text="7"
+        android:textColor="#000000"
+        app:layout_constraintBottom_toTopOf="@+id/btn4"
+        app:layout_constraintEnd_toStartOf="@+id/btn8"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnCE" />
+
+    <Button
+        android:id="@+id/btn8"
+        style="@style/CaculatorButton"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:backgroundTint="#DCDCDC"
+        android:text="8"
+        android:textColor="#000000"
+        app:layout_constraintBottom_toBottomOf="@+id/btn7"
+        app:layout_constraintEnd_toStartOf="@+id/btn9"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/btn7"
+        app:layout_constraintTop_toTopOf="@+id/btn7" />
+
+    <Button
+        android:id="@+id/btn9"
+        style="@style/CaculatorButton"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:backgroundTint="#DCDCDC"
+        android:text="9"
+        android:textColor="#000000"
+        app:layout_constraintBottom_toBottomOf="@+id/btn8"
+        app:layout_constraintEnd_toStartOf="@+id/btnMultiplication"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/btn8"
+        app:layout_constraintTop_toTopOf="@+id/btn8" />
+
+    <Button
+        android:id="@+id/btnMultiplication"
+        style="@style/CaculatorButton"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:backgroundTint="#A6A1A1"
+        android:text="x"
+        android:textColor="#000000"
+        app:layout_constraintBottom_toBottomOf="@+id/btn9"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/btn9"
+        app:layout_constraintTop_toTopOf="@+id/btn9" />
+
+    <!-- Hàng 3: 4, 5, 6, - -->
+    <Button
+        android:id="@+id/btn4"
+        style="@style/CaculatorButton"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:backgroundTint="#DCDCDC"
+        android:text="4"
+        android:textColor="#000000"
+        app:layout_constraintBottom_toTopOf="@+id/btn1"
+        app:layout_constraintEnd_toStartOf="@+id/btn5"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn7" />
+
+    <Button
+        android:id="@+id/btn5"
+        style="@style/CaculatorButton"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:backgroundTint="#DCDCDC"
+        android:text="5"
+        android:textColor="#000000"
+        app:layout_constraintBottom_toBottomOf="@+id/btn4"
+        app:layout_constraintEnd_toStartOf="@+id/btn6"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/btn4"
+        app:layout_constraintTop_toTopOf="@+id/btn4" />
+
+    <Button
+        android:id="@+id/btn6"
+        style="@style/CaculatorButton"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:backgroundTint="#DCDCDC"
+        android:text="6"
+        android:textColor="#000000"
+        app:layout_constraintBottom_toBottomOf="@+id/btn5"
+        app:layout_constraintEnd_toStartOf="@+id/btnMinus"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/btn5"
+        app:layout_constraintTop_toTopOf="@+id/btn5" />
+
+    <Button
+        android:id="@+id/btnMinus"
+        style="@style/CaculatorButton"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:backgroundTint="#A6A1A1"
+        android:text="-"
+        android:textColor="#000000"
+        app:layout_constraintBottom_toBottomOf="@+id/btn6"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/btn6"
+        app:layout_constraintTop_toTopOf="@+id/btn6" />
+
+    <!-- Hàng 4: 1, 2, 3, + -->
+    <Button
+        android:id="@+id/btn1"
+        style="@style/CaculatorButton"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:backgroundTint="#DCDCDC"
+        android:text="1"
+        android:textColor="#000000"
+        app:layout_constraintBottom_toTopOf="@+id/btnM"
+        app:layout_constraintEnd_toStartOf="@+id/btn2"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn4" />
+
+    <Button
+        android:id="@+id/btn2"
+        style="@style/CaculatorButton"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:backgroundTint="#DCDCDC"
+        android:text="2"
+        android:textColor="#000000"
+        app:layout_constraintBottom_toBottomOf="@+id/btn1"
+        app:layout_constraintEnd_toStartOf="@+id/btn3"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/btn1"
+        app:layout_constraintTop_toTopOf="@+id/btn1" />
+
+    <Button
+        android:id="@+id/btn3"
+        style="@style/CaculatorButton"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:backgroundTint="#DCDCDC"
+        android:text="3"
+        android:textColor="#000000"
+        app:layout_constraintBottom_toBottomOf="@+id/btn2"
+        app:layout_constraintEnd_toStartOf="@+id/btnPlus"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/btn2"
+        app:layout_constraintTop_toTopOf="@+id/btn2" />
+
+    <Button
+        android:id="@+id/btnPlus"
+        style="@style/CaculatorButton"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:backgroundTint="#A6A1A1"
+        android:text="+"
+        android:textColor="#000000"
+        app:layout_constraintBottom_toBottomOf="@+id/btn3"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/btn3"
+        app:layout_constraintTop_toTopOf="@+id/btn3" />
+
+    <!-- Hàng 5: +/-, 0, ., = -->
+    <Button
+        android:id="@+id/btnM"
+        style="@style/CaculatorButton"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:backgroundTint="#A6A1A1"
+        android:text="+/-"
+        android:textColor="#000000"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/btn0"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn1" />
+
+    <Button
+        android:id="@+id/btn0"
+        style="@style/CaculatorButton"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:backgroundTint="#DCDCDC"
+        android:text="0"
+        android:textColor="#000000"
+        app:layout_constraintBottom_toBottomOf="@+id/btnM"
+        app:layout_constraintEnd_toStartOf="@+id/btnDot"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/btnM"
+        app:layout_constraintTop_toTopOf="@+id/btnM" />
+
+    <Button
+        android:id="@+id/btnDot"
+        style="@style/CaculatorButton"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:backgroundTint="#A6A1A1"
+        android:text="."
+        android:textColor="#000000"
+        app:layout_constraintBottom_toBottomOf="@+id/btn0"
+        app:layout_constraintEnd_toStartOf="@+id/btnEqual"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/btn0"
+        app:layout_constraintTop_toTopOf="@+id/btn0" />
+
+    <Button
+        android:id="@+id/btnEqual"
+        style="@style/CaculatorButton"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:backgroundTint="#A6A1A1"
+        android:text="="
+        android:textColor="#000000"
+        app:layout_constraintBottom_toBottomOf="@+id/btnDot"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/btnDot"
+        app:layout_constraintTop_toTopOf="@+id/btnDot" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
