@@ -1,7 +1,10 @@
 package com.example.bt_caculatorconstrainlayout
 
 import android.os.Bundle
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import android.widget.Button
+import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
@@ -15,6 +18,11 @@ class MainActivity : AppCompatActivity() {
     private lateinit var displayView: TextView
     // TextView hiển thị biểu thức đang nhập
     private lateinit var expressionView: TextView
+    // TextView hiển thị kết quả chuyển đổi tiền tệ
+    private lateinit var currencyResultView: TextView
+    // Spinner chọn tiền tệ nguồn và đích
+    private lateinit var spinnerFromCurrency: Spinner
+    private lateinit var spinnerToCurrency: Spinner
 
     // Trạng thái bộ nhớ của máy tính
     // currentOperandStr: chuỗi toán hạng đang nhập (dạng số nguyên)
@@ -27,6 +35,30 @@ class MainActivity : AppCompatActivity() {
     private var pendingOperator: Char? = null
     private var isStartingNewOperand: Boolean = true
     private var lastActionWasEqual: Boolean = false
+
+    // Dữ liệu tỷ giá tiền tệ (tỷ giá so với VND - cố định, lấy từ cột "Bán" của ngân hàng)
+    // Key: mã tiền tệ, Value: số VND đổi được cho 1 đơn vị tiền tệ đó
+    private val exchangeRates = mapOf(
+        "VND" to 1.0,           // Đồng Việt Nam (chuẩn)
+        "USD" to 26361.00,      // Đô la Mỹ
+        "EUR" to 31193.60,      // Euro
+        "GBP" to 35132.64,      // Bảng Anh
+        "JPY" to 175.17,        // Yên Nhật
+        "AUD" to 17432.80,      // Đô la Úc
+        "SGD" to 20540.68,      // Đô la Singapore
+        "THB" to 829.89,        // Baht Thái
+        "CAD" to 19058.62,      // Đô la Canada
+        "CHF" to 33160.35,      // Franc Thụy Sĩ
+        "HKD" to 3446.61,       // Đô la Hồng Kông
+        "CNY" to 3752.45,       // Nhân dân tệ
+        "DKK" to 4150.62,       // Krone Đan Mạch
+        "INR" to 307.47,        // Rupee Ấn Độ
+        "KRW" to 18.86,         // Won Hàn Quốc
+        "KWD" to 89242.10       // Dinar Kuwait
+    )
+
+    // Danh sách mã tiền tệ để hiển thị trong Spinner
+    private val currencyCodes = exchangeRates.keys.sorted().toList()
 
     // Cập nhật nội dung lên màn hình hiển thị
     private fun updateDisplay() {
@@ -64,6 +96,10 @@ class MainActivity : AppCompatActivity() {
         }
         updateDisplay()
         updateExpression()
+        // Tự động chuyển đổi tiền tệ khi nhập số (chỉ khi không có phép toán đang chờ)
+        if (pendingOperator == null) {
+            performCurrencyConversion()
+        }
     }
 
     // Chuyển chuỗi toán hạng hiện tại về Long an toàn
@@ -139,6 +175,8 @@ class MainActivity : AppCompatActivity() {
         isStartingNewOperand = true
         updateDisplay()
         updateExpression()
+        // Xóa kết quả chuyển đổi tiền tệ
+        currencyResultView.text = ""
     }
 
     // C: Xóa toàn bộ trạng thái, nhập lại từ đầu
@@ -149,6 +187,8 @@ class MainActivity : AppCompatActivity() {
         isStartingNewOperand = true
         lastActionWasEqual = false
         updateDisplay()
+        // Xóa kết quả chuyển đổi tiền tệ
+        currencyResultView.text = ""
     }
 
     // BS: Xóa một chữ số ở hàng đơn vị của toán hạng hiện tại
@@ -162,6 +202,10 @@ class MainActivity : AppCompatActivity() {
         }
         updateDisplay()
         updateExpression()
+        // Tự động chuyển đổi tiền tệ khi xóa số (chỉ khi không có phép toán đang chờ)
+        if (pendingOperator == null) {
+            performCurrencyConversion()
+        }
     }
 
     // +/-: Đổi dấu của toán hạng hiện tại (0 không đổi)
@@ -174,6 +218,10 @@ class MainActivity : AppCompatActivity() {
         }
         updateDisplay()
         updateExpression()
+        // Tự động chuyển đổi tiền tệ khi đổi dấu (chỉ khi không có phép toán đang chờ)
+        if (pendingOperator == null) {
+            performCurrencyConversion()
+        }
     }
 
     // Dấu chấm (.) bị vô hiệu vì bài tập ở chế độ số nguyên
@@ -187,6 +235,50 @@ class MainActivity : AppCompatActivity() {
         onClearAll()
     }
 
+    // Chuyển đổi tiền tệ từ loại này sang loại khác
+    // Tỷ giá được lưu dưới dạng số VND đổi được cho 1 đơn vị tiền tệ
+    private fun convertCurrency(amount: Double, fromCurrency: String, toCurrency: String): Double {
+        // Lấy tỷ giá của tiền tệ nguồn và đích (số VND cho 1 đơn vị)
+        val rateFrom = exchangeRates[fromCurrency] ?: 1.0
+        val rateTo = exchangeRates[toCurrency] ?: 1.0
+        
+        // Chuyển đổi số tiền từ tiền tệ nguồn sang VND
+        val amountInVND = amount * rateFrom
+        
+        // Chuyển đổi từ VND sang tiền tệ đích
+        return amountInVND / rateTo
+    }
+
+    // Thực hiện chuyển đổi tiền tệ và hiển thị kết quả
+    private fun performCurrencyConversion() {
+        try {
+            // Kiểm tra nếu Spinner chưa được khởi tạo
+            if (!::spinnerFromCurrency.isInitialized || !::spinnerToCurrency.isInitialized) {
+                return
+            }
+
+            // Lấy số tiền từ màn hình Calculator
+            val amount = currentOperandStr.toDoubleOrNull() ?: 0.0
+            if (currentOperandStr == "0" || currentOperandStr.isEmpty()) {
+                currencyResultView.text = ""
+                return
+            }
+
+            // Lấy mã tiền tệ từ Spinner
+            val fromCurrency = spinnerFromCurrency.selectedItem as String
+            val toCurrency = spinnerToCurrency.selectedItem as String
+
+            // Chuyển đổi
+            val convertedAmount = convertCurrency(amount, fromCurrency, toCurrency)
+
+            // Hiển thị kết quả với định dạng số (làm tròn đến 2 chữ số thập phân)
+            val formattedResult = String.format("%.2f", convertedAmount)
+            currencyResultView.text = "$amount $fromCurrency = $formattedResult $toCurrency"
+        } catch (e: Exception) {
+            currencyResultView.text = "Lỗi chuyển đổi"
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -195,6 +287,51 @@ class MainActivity : AppCompatActivity() {
         // Tham chiếu TextView hiển thị kết quả và biểu thức
         displayView = findViewById(R.id.textView2)
         expressionView = findViewById(R.id.textExpression)
+        currencyResultView = findViewById(R.id.textCurrencyResult)
+
+        // Thiết lập Spinner cho chuyển đổi tiền tệ
+        spinnerFromCurrency = findViewById(R.id.spinnerFromCurrency)
+        spinnerToCurrency = findViewById(R.id.spinnerToCurrency)
+
+        // Tạo ArrayAdapter cho Spinner
+        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, currencyCodes)
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+
+        // Gán adapter cho cả hai Spinner
+        spinnerFromCurrency.adapter = adapter
+        spinnerToCurrency.adapter = adapter
+
+        // Thiết lập giá trị mặc định (VND và USD)
+        val defaultFromIndex = currencyCodes.indexOf("VND").coerceAtLeast(0)
+        val defaultToIndex = currencyCodes.indexOf("USD").coerceAtLeast(0)
+        spinnerFromCurrency.setSelection(defaultFromIndex)
+        spinnerToCurrency.setSelection(defaultToIndex)
+
+        // Lắng nghe sự kiện thay đổi Spinner để tự động chuyển đổi
+        spinnerFromCurrency.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>?, view: android.view.View?, position: Int, id: Long) {
+                // Tự động chuyển đổi khi thay đổi tiền tệ nguồn (chỉ khi không có phép toán đang chờ)
+                if (pendingOperator == null) {
+                    performCurrencyConversion()
+                }
+            }
+            override fun onNothingSelected(parent: AdapterView<*>?) {}
+        }
+
+        spinnerToCurrency.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>?, view: android.view.View?, position: Int, id: Long) {
+                // Tự động chuyển đổi khi thay đổi tiền tệ đích (chỉ khi không có phép toán đang chờ)
+                if (pendingOperator == null) {
+                    performCurrencyConversion()
+                }
+            }
+            override fun onNothingSelected(parent: AdapterView<*>?) {}
+        }
+
+        // Gán sự kiện cho nút Convert
+        findViewById<Button>(R.id.btnConvert).setOnClickListener {
+            performCurrencyConversion()
+        }
 
         // Gán sự kiện cho các phím số 0-9
         val digitIds = listOf(
